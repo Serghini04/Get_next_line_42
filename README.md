@@ -1,26 +1,77 @@
-<div id="header" align="center">
-  <img src="https://s4.gifyu.com/images/back_slash_green.gif" height="180"/>
-  <img src="https://s4.gifyu.com/images/n_gif.gif" width="180"/>
-</div>
- 
+## 📋 Description
 
-<h1 align="center">School 1337 get_next_line()</h1>
+`get_next_line` is a function that reads a line ending with a newline character (`\n`) from a file descriptor. When called repeatedly, it allows reading a text file line by line until the end. This project aims to improve understanding of static variables, memory allocation, and file manipulation in C.
 
-This is the repository for the School 1337 cursus project`get_next_line()`.
+## 🔧 Function Prototype
 
-<h2 align="center">
-	<a href="#about">About</a>
-	<span> · </span>
-	<a href="#index">Index</a>
-	<span> · </span>
-	<a href="#requirements">Requirements</a>
-	<span> · </span>
-	<a href="#instructions">Instructions</a>
-	<span> · </span>
-	<a href="#testing">Testing</a>
-</h2>
+```c
+char *get_next_line(int fd);
+```
 
-## About
-The goal of this project is to create the function `get_next_line.c` which, when called in a loop, will read one line at a time in the __file descriptor__, until the end of the file. As stated in the subject, the program must compile with the `flag-D BUFFER_SIZE=` which will be used as the buffer size for the `read` calls in `get_next_line()`.
+### Parameters
+- `fd`: The file descriptor to read from
 
-This project is a introduction of __static variables__, which will be very useful for future projects. Also, as noted earlier, we'll learn how handle macros during compilation.
+### Return Value
+- Returns the line that was read (including the newline character unless it's the end of file and doesn't end with a newline)
+- Returns NULL if there is nothing else to read or if an error occurred
+
+## ⭐ Features
+
+- 📖 Reads from multiple file descriptors simultaneously
+- 🔒 No memory leaks
+- 📏 Handles various buffer sizes
+- ↩️ Returns one line at a time
+- ⌨️ Works with both files and standard input
+
+## 💻 Usage
+
+### 🔨 Compilation
+
+To compile with a specific buffer size:
+```bash
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c
+```
+
+### 📝 Example
+
+```c
+#include "get_next_line.h"
+#include <fcntl.h>
+#include <stdio.h>
+
+int main(void)
+{
+    int fd = open("test.txt", O_RDONLY);
+    char *line;
+
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
+    close(fd);
+    return (0);
+}
+```
+
+## 📁 Files
+
+- `get_next_line.c`: Main function implementation
+- `get_next_line.h`: Header file with function prototypes and includes
+- `get_next_line_utils.c`: Helper functions
+- `get_next_line_bonus.c`: Bonus part implementation (multiple fd handling)
+- `get_next_line_utils_bonus.c`: Bonus helper functions
+
+## ⚙️ Requirements
+
+- The function should return the line that was read
+- If there is nothing else to read or if an error occurred, it should return NULL
+- The returned line should include the terminating `\n` character except if the end of file was reached and does not end with a `\n`
+- Works with any BUFFER_SIZE value greater than 0
+
+## 📌 Notes
+
+- External functions allowed: read, malloc, free
+- All memory allocated with malloc must be properly freed
+- Undefined behavior if the file pointed to by the file descriptor changed since the last call whereas read() didn't reach the end of file
+- Undefined behavior when reading a binary file
